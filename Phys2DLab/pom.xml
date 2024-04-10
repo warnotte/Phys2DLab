@@ -5,6 +5,18 @@
 	<groupId>io.gihut.warnotte</groupId>
 	<artifactId>Phys2DLab</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>6</maven.compiler.source>
+		<maven.compiler.target>6</maven.compiler.target>
+		<maven.compiler.release>6</maven.compiler.release>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+		<project.mainclass1>wax.Demo20</project.mainclass1>
+		<project.program1>Phys2DLab</project.program1>
+		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+	</properties>
+	
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -16,7 +28,119 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-		</plugins>
+		
+		
+		
+		
+			
+			
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-first</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.program1}-${project.version}</finalName>
+							<archive>
+
+								<manifestEntries>
+									<!-- the flag shows that the JAR is
+									multi-release one -->
+									<Multi-Release>true</Multi-Release>
+									<!-- add main class name to make easier to
+									start from command line -->
+									<mainClass>${project.mainclass1}</mainClass>
+								</manifestEntries>
+								<manifest>
+									<mainClass>${project.mainclass1}</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+
+
+				</executions>
+			</plugin>
+			
+			
+			
+
+
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<!-- <version>1.7.25</version> -->
+				<executions>
+					<execution>
+						<id>l4j-clui-1</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>console</headerType>
+							<outfile>
+								target/${project.program1}-${project.version}_${maven.build.timestamp}.exe</outfile>
+							<jar>
+								target/${project.program1}-${project.version}-jar-with-dependencies.jar</jar>
+							<errTitle>encc</errTitle>
+							<chdir>.</chdir>
+							<classPath>
+								<mainClass>${project.mainclass1}</mainClass>
+								<addDependencies>true</addDependencies>
+								<preCp>anything</preCp>
+							</classPath>
+							<jre>
+								<minVersion>1.${maven.compiler.target}.0</minVersion>
+								<path>jdk-21</path>
+								<!--<bundledJre64Bit>true</bundledJre64Bit>-->
+								<requires64Bit>true</requires64Bit>
+
+								<!-- <opts>
+								<opt>-Djava.endorsed.dirs=./endorsed</opt>
+								</opts> -->
+								<opts>
+									<opt>-Dfile.encoding="UTF-8"</opt>
+									<opt>-Dsun.java2d.d3d=false</opt> <!-- Pour régler bug graphique -->
+									<!-- Ceci sinon jide déconne quand on fait clique droit dans ses "fenêtres" -->
+									<opt>--add-exports java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED</opt>
+									<!-- Ceci permet d'eviter un bug quand decroche stiffenerproperties et qu'on edit "Amount" -->
+									<opt>--add-opens java.desktop/javax.swing=ALL-UNNAMED</opt>
+									<opt>--add-opens java.desktop/java.awt.font=ALL-UNNAMED</opt>
+									<opt>--add-opens java.base/java.lang.reflect=ALL-UNNAMED</opt>
+									<opt>--add-opens java.base/java.util=ALL-UNNAMED</opt>
+									<opt>--add-opens java.base/java.text=ALL-UNNAMED</opt>
+								</opts>
+
+							</jre>
+							<versionInfo>
+								<fileVersion>1.0.0.0</fileVersion>
+								<txtFileVersion>1.0.0.0</txtFileVersion>
+								<fileDescription>${project.name}</fileDescription>
+								<copyright>Warnotte Renaud</copyright>
+								<productVersion>1.0.0.0</productVersion>
+								<txtProductVersion>1.0.0.0</txtProductVersion>
+								<productName>${project.name}</productName>
+								<originalFilename>
+									${project.program1}-${project.version}_${maven.build.timestamp}.exe</originalFilename>
+								<internalName>${project.name}</internalName>
+							</versionInfo>
+						</configuration>
+					</execution>
+
+
+				</executions>
+			</plugin>
+</plugins>
+		
 	</build>
 	<dependencies>
 
